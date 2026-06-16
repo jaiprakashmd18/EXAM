@@ -1,32 +1,72 @@
+import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import StudentCardTable from "./components/StudentCardTable";
+import { defaultCourses } from "./data/courses";
+import type { Course } from "./data/courses";
 
-function App() {
+export default function App() {
+  const [studentName, setStudentName] = useState("Jai Prakash Mohan Kumar Devi");
+  const [courses, setCourses] = useState<Course[]>(defaultCourses);
+  const [view, setView] = useState<"semester" | "year">("year");
+
+  const handleCourseChange = (id: number, field: keyof Course, value: string | number) => {
+    setCourses((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, [field]: value } : c))
+    );
+  };
+
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <Sidebar studentName={studentName} onNameChange={setStudentName} />
+
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Header />
-        <main className="flex-1 overflow-y-auto p-7 bg-gray-100">
-          {/* Program dropdown + toggle row */}
+
+        <main className="flex-1 overflow-y-auto bg-gray-100 p-6">
+          {/* Program + toggle row */}
           <div className="flex items-center justify-between mb-5">
             <div className="relative">
-              <label className="absolute -top-2 left-3 bg-white px-1 text-xs text-gray-400 z-10">Program</label>
-              <select className="border border-gray-300 rounded-md px-3 pt-3 pb-2 pr-8 text-sm text-gray-700 appearance-none bg-white min-w-[200px]">
+              <label className="absolute -top-2 left-3 bg-gray-100 px-1 text-xs text-gray-400 leading-none z-10">
+                Program
+              </label>
+              <select
+                className="border border-gray-300 rounded-lg bg-white text-sm text-gray-700 pl-3 pr-8 pt-3 pb-2.5 appearance-none cursor-pointer min-w-[210px] focus:outline-none focus:border-gray-400"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "right 10px center",
+                }}
+              >
                 <option>Medicine (NEW)</option>
+                <option>Dentistry</option>
+                <option>Pharmacy</option>
               </select>
             </div>
-            <div className="flex bg-gray-100 rounded-full p-1 border border-gray-200">
-              <button className="px-4 py-1.5 rounded-full text-sm text-gray-500">semester</button>
-              <button className="px-4 py-1.5 rounded-full text-sm font-semibold bg-white shadow-sm text-gray-800">Learning Year</button>
+
+            <div className="flex items-center bg-gray-200 rounded-full p-1 gap-1">
+              <button
+                onClick={() => setView("semester")}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                  view === "semester" ? "bg-white shadow-sm text-gray-800" : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                semester
+              </button>
+              <button
+                onClick={() => setView("year")}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                  view === "year" ? "bg-white shadow-sm text-gray-800" : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Learning Year
+              </button>
             </div>
           </div>
-          <StudentCardTable />
+
+          <StudentCardTable courses={courses} onChange={handleCourseChange} />
         </main>
       </div>
     </div>
   );
 }
-
-export default App;
