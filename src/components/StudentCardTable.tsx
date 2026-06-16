@@ -55,18 +55,6 @@ export default function StudentCardTable({ courses, onChange }: Props) {
         </table>
       </div>
 
-      {/* Grade legend */}
-      <div className="px-6 py-2 border-t border-gray-50 flex flex-wrap gap-4">
-        {([["A","91-100","bg-green-500"],["B","81-90","bg-blue-500"],["C","71-80","bg-yellow-500"],["D","61-70","bg-orange-400"],["F","0-60","bg-red-500"]] as const).map(([g, range, color]) => (
-          <div key={g} className="flex items-center gap-1.5">
-            <div className={`w-5 h-5 rounded-full ${color} flex items-center justify-center`}>
-              <span className="text-white text-xs font-bold">{g}</span>
-            </div>
-            <span className="text-xs text-gray-400">{range}</span>
-          </div>
-        ))}
-      </div>
-
       {/* Footer — matches original exactly */}
       <div className="px-6 py-4 border-t border-gray-100 space-y-1">
         <div className="flex items-center gap-2">
