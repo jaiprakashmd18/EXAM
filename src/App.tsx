@@ -2,13 +2,23 @@ import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import StudentCardTable from "./components/StudentCardTable";
+import { defaultCourses } from "./data/courses";
+import type { Course } from "./data/courses";
 
 export default function App() {
+  const [studentName, setStudentName] = useState("Jai Prakash Mohan Kumar Devi");
+  const [courses, setCourses] = useState<Course[]>(defaultCourses);
   const [view, setView] = useState<"semester" | "year">("year");
+
+  const handleCourseChange = (id: number, field: keyof Course, value: string | number) => {
+    setCourses((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, [field]: value } : c))
+    );
+  };
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100">
-      <Sidebar />
+      <Sidebar studentName={studentName} onNameChange={setStudentName} />
 
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Header />
@@ -16,7 +26,6 @@ export default function App() {
         <main className="flex-1 overflow-y-auto bg-gray-100 p-6">
           {/* Program + toggle row */}
           <div className="flex items-center justify-between mb-5">
-            {/* Program dropdown */}
             <div className="relative">
               <label className="absolute -top-2 left-3 bg-gray-100 px-1 text-xs text-gray-400 leading-none z-10">
                 Program
@@ -35,14 +44,11 @@ export default function App() {
               </select>
             </div>
 
-            {/* Semester / Learning Year toggle */}
             <div className="flex items-center bg-gray-200 rounded-full p-1 gap-1">
               <button
                 onClick={() => setView("semester")}
                 className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  view === "semester"
-                    ? "bg-white shadow-sm text-gray-800"
-                    : "text-gray-500 hover:text-gray-700"
+                  view === "semester" ? "bg-white shadow-sm text-gray-800" : "text-gray-500 hover:text-gray-700"
                 }`}
               >
                 semester
@@ -50,9 +56,7 @@ export default function App() {
               <button
                 onClick={() => setView("year")}
                 className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  view === "year"
-                    ? "bg-white shadow-sm text-gray-800"
-                    : "text-gray-500 hover:text-gray-700"
+                  view === "year" ? "bg-white shadow-sm text-gray-800" : "text-gray-500 hover:text-gray-700"
                 }`}
               >
                 Learning Year
@@ -60,7 +64,7 @@ export default function App() {
             </div>
           </div>
 
-          <StudentCardTable />
+          <StudentCardTable courses={courses} onChange={handleCourseChange} />
         </main>
       </div>
     </div>
