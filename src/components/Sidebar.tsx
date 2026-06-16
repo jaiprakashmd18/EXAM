@@ -3,9 +3,10 @@ import { useState, useRef } from "react";
 interface Props {
   studentName: string;
   onNameChange: (name: string) => void;
+  onClose: () => void;
 }
 
-export default function Sidebar({ studentName, onNameChange }: Props) {
+export default function Sidebar({ studentName, onNameChange, onClose }: Props) {
   const [editingName, setEditingName] = useState(false);
   const [draft, setDraft] = useState(studentName);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -37,11 +38,22 @@ export default function Sidebar({ studentName, onNameChange }: Props) {
   ];
 
   return (
-    <div className="w-56 h-screen bg-white border-r border-gray-200 flex flex-col flex-shrink-0 overflow-y-auto">
-      {/* Profile */}
+    <div className="w-56 h-screen bg-white border-r border-gray-200 flex flex-col overflow-y-auto flex-shrink-0">
+      {/* Profile + close button (close only on mobile) */}
       <div className="px-5 py-5 border-b border-gray-100">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center mb-3 flex-shrink-0">
-          <span className="text-white font-bold text-lg">{studentName.charAt(0)}</span>
+        <div className="flex items-start justify-between mb-3">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-bold text-lg">{studentName.charAt(0)}</span>
+          </div>
+          <button
+            onClick={onClose}
+            className="lg:hidden p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors mt-0.5"
+            aria-label="Close menu"
+          >
+            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
         </div>
         {editingName ? (
           <input
@@ -71,16 +83,17 @@ export default function Sidebar({ studentName, onNameChange }: Props) {
           return (
             <div
               key={i}
+              onClick={item.active ? undefined : onClose}
               className={`flex items-center justify-between px-4 py-2.5 cursor-pointer ${
                 item.active ? "bg-orange-500 text-white" : "text-gray-600 hover:bg-gray-50"
               }`}
             >
-              <div className="flex items-center gap-3">
-                <span className={item.active ? "text-white" : "text-gray-400"}>{item.icon}</span>
-                <span className="text-sm">{item.label}</span>
+              <div className="flex items-center gap-3 min-w-0">
+                <span className={`flex-shrink-0 ${item.active ? "text-white" : "text-gray-400"}`}>{item.icon}</span>
+                <span className="text-sm truncate">{item.label}</span>
               </div>
               {item.badge && (
-                <span className={`text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center ${item.active ? "bg-white text-orange-500" : "bg-orange-500 text-white"}`}>
+                <span className={`text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center flex-shrink-0 ml-1 ${item.active ? "bg-white text-orange-500" : "bg-orange-500 text-white"}`}>
                   {item.badge}
                 </span>
               )}
