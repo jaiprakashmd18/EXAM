@@ -17,36 +17,33 @@ export default function StudentCardTable({ courses, onChange }: Props) {
         <h2 className="text-green-600 font-bold text-sm md:text-base">2025/2026 Spring - 1 semester</h2>
       </div>
 
-      {/* Horizontal scroll wrapper — critical for mobile */}
       <div className="overflow-x-auto">
-        <table className="border-collapse" style={{ tableLayout: "fixed", minWidth: 640, width: "100%" }}>
-          <colgroup>
-            <col style={{ width: 40 }} />
-            <col style={{ width: 40 }} />
-            <col style={{ width: "30%" }} />
-            <col style={{ width: "26%" }} />
-            <col style={{ width: 76 }} />
-            <col style={{ width: 76 }} />
-            <col style={{ width: 64 }} />
-          </colgroup>
+        <table className="border-collapse w-full" style={{ tableLayout: "auto", minWidth: 600 }}>
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="py-2.5" />
-              <th className="py-2.5 text-left pl-1">
+              {/* chevron col */}
+              <th className="py-3 w-9 pl-4" />
+              {/* icon / ბილეთები col */}
+              <th className="py-3 w-9 text-left">
                 <span className="text-xs text-gray-400 font-semibold">ბილეთები</span>
               </th>
-              <th className="py-2.5 text-left" />
-              <th className="py-2.5 text-left">
+              {/* course name — takes remaining space */}
+              <th className="py-3 text-left" />
+              {/* professor */}
+              <th className="py-3 text-left whitespace-nowrap">
                 <span className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Professor</span>
               </th>
-              <th className="py-2.5 text-center">
+              {/* credit — tight, right next to professor */}
+              <th className="py-3 w-16 text-right pr-4">
                 <span className="text-xs text-gray-400 font-semibold uppercase tracking-wide">credit</span>
               </th>
-              <th className="py-2.5 text-center">
+              {/* score */}
+              <th className="py-3 w-16 text-right pr-4">
                 <span className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Score</span>
               </th>
-              <th className="py-2.5 text-right pr-4">
-                <span className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Grade</span>
+              {/* rate */}
+              <th className="py-3 w-16 text-right pr-5">
+                <span className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Rate</span>
               </th>
             </tr>
           </thead>
@@ -60,7 +57,7 @@ export default function StudentCardTable({ courses, onChange }: Props) {
 
       {/* Grade legend */}
       <div className="px-4 md:px-6 py-2 border-t border-gray-50 flex flex-wrap gap-3">
-        {([["A","91-100","bg-green-500"],["B","81-90","bg-blue-500"],["C","71-80","bg-yellow-500"],["D","61-70","bg-orange-400"],["F","0-60","bg-red-500"]] as const).map(([g,range,color])=>(
+        {([["A","91-100","bg-green-500"],["B","81-90","bg-blue-500"],["C","71-80","bg-yellow-500"],["D","61-70","bg-orange-400"],["F","0-60","bg-red-500"]] as const).map(([g, range, color]) => (
           <div key={g} className="flex items-center gap-1.5">
             <div className={`w-5 h-5 rounded-full ${color} flex items-center justify-center flex-shrink-0`}>
               <span className="text-white text-xs font-bold">{g}</span>
