@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Card – TSMU</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #F5F5F5;
+    color: #212121;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: #fff;
+    border-right: 1px solid #E0E0E0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  #sidebar-logo {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid #F0F0F0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #sidebar-logo svg {
+    flex-shrink: 0;
+  }
+
+  #sidebar-logo-text {
+    font-weight: 700;
+    font-size: 15px;
+    color: #1a237e;
+    line-height: 1.2;
+  }
+
+  #sidebar-logo-text span {
+    display: block;
+    font-weight: 400;
+    font-size: 10px;
+    color: #757575;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  nav {
+    padding: 10px 0;
+    flex: 1;
+  }
+
+  nav a {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 18px;
+    font-size: 13.5px;
+    color: #424242;
+    text-decoration: none;
+    border-left: 4px solid transparent;
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  nav a:hover {
+    background: #F5F5F5;
+    color: #212121;
+  }
+
+  nav a.active {
+    border-left-color: #FF5722;
+    background: #FFF3E0;
+    color: #E64A19;
+    font-weight: 600;
+  }
+
+  nav a .nav-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN WRAPPER ── */
+  #main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  #header {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 0 28px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 10;
+    flex-shrink: 0;
+  }
+
+  #header-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 8px;
+  }
+
+  #header-logo-badge {
+    background: #1a237e;
+    color: #fff;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    padding: 5px 9px;
+    border-radius: 6px;
+  }
+
+  #header-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.3;
+  }
+
+  #student-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #212121;
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: center;
+    cursor: text;
+    min-width: 100px;
+    border-radius: 4px;
+    padding: 1px 4px;
+    transition: background 0.15s;
+  }
+
+  #student-name:focus {
+    background: #F3F4F6;
+  }
+
+  #student-program-header {
+    font-size: 12px;
+    color: #757575;
+    margin-top: 1px;
+  }
+
+  #header-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .header-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: #555;
+    text-decoration: none;
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+
+  .header-link:hover {
+    background: #F5F5F5;
+    color: #212121;
+  }
+
+  .header-link .hl-icon {
+    font-size: 15px;
+  }
+
+  /* ── CONTENT ── */
+  #content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 36px 60px;
+  }
+
+  #content h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #212121;
+    margin-bottom: 20px;
+  }
+
+  /* ── PROGRAM ROW ── */
+  #program-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  #program-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #616161;
+  }
+
+  #program-field {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #212121;
+    border: 1px solid #E0E0E0;
+    border-radius: 6px;
+    padding: 6px 12px;
+    background: #fff;
+    cursor: text;
+    outline: none;
+    min-width: 220px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  #program-field:focus {
+    border-color: #00BFA5;
+    box-shadow: 0 0 0 2px rgba(0,191,165,0.12);
+  }
+
+  /* ── TOGGLES ── */
+  #toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 22px;
+    border-bottom: 2px solid #E0E0E0;
+    width: fit-content;
+  }
+
+  .toggle-btn {
+    padding: 8px 22px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #757575;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.15s, border-color 0.15s;
+    outline: none;
+  }
+
+  .toggle-btn:hover { color: #424242; }
+
+  .toggle-btn.active {
+    color: #00BFA5;
+    border-bottom-color: #00BFA5;
+    font-weight: 600;
+  }
+
+  /* ── SEMESTER HEADING ── */
+  #semester-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: #00BFA5;
+    margin-bottom: 16px;
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: text;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background 0.15s;
+    display: block;
+  }
+
+  #semester-heading:focus {
+    background: rgba(0,191,165,0.07);
+  }
+
+  /* ── TABLE ── */
+  #table-wrapper {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  thead tr {
+    background: #F9FAFB;
+    border-bottom: 2px solid #E0E0E0;
+  }
+
+  thead th {
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 600;
+    color: #616161;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  thead th:first-child { width: 40px; padding-left: 14px; }
+  thead th.th-icon { width: 36px; }
+  thead th.th-chevron { width: 36px; }
+  thead th.th-name { min-width: 280px; }
+  thead th.th-prof { min-width: 170px; }
+  thead th.th-credit { width: 70px; text-align: center; }
+  thead th.th-score { width: 70px; text-align: center; }
+  thead th.th-del { width: 44px; }
+
+  tbody tr {
+    border-bottom: 1px solid #F0F0F0;
+    transition: background 0.12s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #FAFAFA; }
+
+  tbody tr:hover .del-btn { opacity: 1; }
+
+  td {
+    padding: 11px 14px;
+    vertical-align: top;
+  }
+
+  td[contenteditable="true"] {
+    outline: none;
+    cursor: text;
+    border-radius: 4px;
+    transition: background 0.12s;
+  }
+
+  td[contenteditable="true"]:focus {
+    background: #F0FDF9;
+    box-shadow: inset 0 0 0 1px #00BFA5;
+  }
+
+  .td-icon { width: 36px; padding: 11px 6px 11px 14px; vertical-align: middle; }
+  .td-chevron { width: 36px; padding: 11px 6px; vertical-align: middle; }
+  .td-credit { text-align: center; }
+  .td-score { text-align: center; }
+  .td-del { width: 44px; padding: 11px 8px; vertical-align: middle; }
+
+  .blue-icon {
+    width: 24px;
+    height: 24px;
+    background: #1565C0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    cursor: default;
+    user-select: none;
+  }
+
+  .chevron-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    color: #9E9E9E;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background 0.12s, color 0.12s;
+    line-height: 1;
+  }
+
+  .chevron-btn:hover { background: #F0F0F0; color: #424242; }
+
+  .del-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: #EF5350;
+    padding: 3px 5px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.12s, background 0.12s;
+  }
+
+  .del-btn:hover { background: #FFEBEE; }
+
+  .course-name-cell {
+    font-weight: 500;
+    color: #212121;
+    line-height: 1.45;
+  }
+
+  .detail-row td {
+    padding: 0 14px 12px 74px;
+    color: #757575;
+    font-size: 12.5px;
+    font-style: italic;
+  }
+
+  .detail-row { background: #FAFEFF !important; }
+
+  /* ── SUMMARY ── */
+  #summary-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .summary-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: #fff;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13.5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .summary-chip .chip-label {
+    color: #757575;
+    font-weight: 400;
+  }
+
+  .summary-chip .chip-value {
+    font-weight: 700;
+    color: #212121;
+  }
+
+  #gpa-chip .chip-value { color: #00BFA5; }
+
+  /* ── ADD COURSE BTN ── */
+  #add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1.5px dashed #BDBDBD;
+    border-radius: 8px;
+    padding: 9px 20px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #616161;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    outline: none;
+  }
+
+  #add-btn:hover {
+    border-color: #00BFA5;
+    color: #00BFA5;
+    background: #F0FDF9;
+  }
+
+  /* ── CHAT FAB ── */
+  #chat-fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 56px;
+    height: 56px;
+    background: #FF5722;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 14px rgba(255,87,34,0.4);
+    transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+    z-index: 100;
+  }
+
+  #chat-fab:hover {
+    background: #E64A19;
+    transform: scale(1.07);
+    box-shadow: 0 6px 20px rgba(255,87,34,0.5);
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #D0D0D0; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #BDBDBD; }
+
+  /* ── NOTIFICATION BADGE ── */
+  .notif-dot {
+    width: 7px; height: 7px;
+    background: #FF5722;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 2px;
+    vertical-align: middle;
+  }
+
+  [contenteditable]:empty:before {
+    content: attr(data-placeholder);
+    color: #BDBDBD;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div id="sidebar-logo">
+    <svg width="32" height="36" viewBox="0 0 32 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 0L0 6v12c0 9.94 6.84 19.24 16 22 9.16-2.76 16-12.06 16-22V6L16 0z" fill="#1a237e"/>
+      <path d="M16 4L3 9v9c0 7.73 5.3 14.94 13 17.44V4z" fill="#283593" opacity=".5"/>
+      <text x="8" y="24" font-family="Inter,sans-serif" font-weight="800" font-size="11" fill="#fff">TS</text>
+    </svg>
+    <div id="sidebar-logo-text">
+      TSMU
+      <span>Medical University</span>
+    </div>
+  </div>
+  <nav>
+    <a href="#"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="#"><span class="nav-icon">📅</span> Calendar</a>
+    <a href="#"><span class="nav-icon">🏛️</span> E-Chancellery</a>
+    <a href="#"><span class="nav-icon">📚</span> LMS</a>
+    <a href="#"><span class="nav-icon">🎓</span> Program</a>
+    <a href="#" class="active"><span class="nav-icon">🪪</span> Student card</a>
+    <a href="#"><span class="nav-icon">📋</span> Table</a>
+    <a href="#"><span class="nav-icon">📝</span> Academic registration</a>
+    <a href="#"><span class="nav-icon">🔔</span> Notifications <span class="notif-dot"></span></a>
+    <a href="#"><span class="nav-icon">💰</span> Finances</a>
+    <a href="#"><span class="nav-icon">👤</span> Personal info</a>
+  </nav>
+</aside>
+
+<!-- MAIN WRAPPER -->
+<div id="main-wrapper">
+
+  <!-- HEADER -->
+  <header id="header">
+    <div id="header-logo">
+      <div id="header-logo-badge">TSMU</div>
+    </div>
+    <div id="header-center">
+      <div
+        id="student-name"
+        contenteditable="true"
+        spellcheck="false"
+        data-placeholder="Student Name"
+      >Jai Prakash Mohan Kumar Devi</div>
+      <div id="student-program-header">Medicine (NEW)</div>
+    </div>
+    <div id="header-links">
+      <a class="header-link"><span class="hl-icon">🏫</span> MIT</a>
+      <a class="header-link"><span class="hl-icon">📖</span> Library</a>
+      <a class="header-link"><span class="hl-icon">📋</span> Survey</a>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main id="content">
+    <h1>Student card</h1>
+
+    <!-- PROGRAM ROW -->
+    <div id="program-row">
+      <span id="program-label">Program:</span>
+      <div
+        id="program-field"
+        contenteditable="true"
+        spellcheck="false"
+        data-placeholder="Enter program"
+      >Medicine (NEW)</div>
+    </div>
+
+    <!-- TOGGLE BUTTONS -->
+    <div id="toggle-row">
+      <button class="toggle-btn active" data-toggle="semester" onclick="switchToggle(this)">Semester</button>
+      <button class="toggle-btn" data-toggle="year" onclick="switchToggle(this)">Learning Year</button>
+    </div>
+
+    <!-- SEMESTER HEADING -->
+    <div
+      id="semester-heading"
+      contenteditable="true"
+      spellcheck="false"
+      data-placeholder="Semester heading"
+    >2025/2026 Spring – 1 semester</div>
+
+    <!-- TABLE -->
+    <div id="table-wrapper">
+      <table id="courses-table">
+        <thead>
+          <tr>
+            <th class="th-icon"></th>
+            <th class="th-chevron"></th>
+            <th class="th-name">Course Name</th>
+            <th class="th-prof">Professor</th>
+            <th class="th-credit">Credit</th>
+            <th class="th-score">Score</th>
+            <th class="th-del"></th>
+          </tr>
+        </thead>
+        <tbody id="courses-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- SUMMARY -->
+    <div id="summary-row">
+      <div class="summary-chip">
+        <span class="chip-label">Program Compatible Credit:</span>
+        <span class="chip-value" id="total-credits">0</span>
+      </div>
+      <div class="summary-chip" id="gpa-chip">
+        <span class="chip-label">GPA:</span>
+        <span class="chip-value" id="gpa-value">0.00</span>
+      </div>
+    </div>
+
+    <!-- ADD COURSE BUTTON -->
+    <button id="add-btn" onclick="addCourse()">＋ Add Course</button>
+  </main>
+</div>
+
+<!-- CHAT FAB -->
+<button id="chat-fab" title="Chat support">💬</button>
+
+<script>
+'use strict';
+
+const STORAGE_KEY = 'studentCardData';
+
+const DEFAULT_COURSES = [
+  { id: 1, name: 'Body structure I (Anatomy & Histology & Imaging) (Musculoskeletal system)', professor: 'Marina Nebieridze', credit: 8, score: 82, expanded: false },
+  { id: 2, name: 'Cell Biology (Cell Biology and Medical Biophysics)', professor: 'Lali Koptonashvili', credit: 6, score: 86, expanded: false },
+  { id: 3, name: 'Introduction to Psychology', professor: 'Natia Badridze', credit: 2, score: 92, expanded: false },
+  { id: 4, name: 'Clinical and Professional skills I (CAPS I) and Medical Ethics', professor: 'Nana Nikolaishvili', credit: 4, score: 94, expanded: false },
+  { id: 5, name: 'Body Function I (Introduction to Physiology & Biochemistry)', professor: 'Joneta Gvazava', credit: 6, score: 89, expanded: false },
+  { id: 6, name: 'Georgian Language I', professor: 'gvantsa tushishvili', credit: 4, score: 98, expanded: false },
+];
+
+let state = {
+  studentName: 'Jai Prakash Mohan Kumar Devi',
+  semesterHeading: '2025/2026 Spring – 1 semester',
+  program: 'Medicine (NEW)',
+  courses: JSON.parse(JSON.stringify(DEFAULT_COURSES)),
+};
+
+let nextId = 100;
+
+/* ── PERSISTENCE ── */
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.courses)) {
+        state = parsed;
+        nextId = Math.max(nextId, ...state.courses.map(c => c.id + 1), 100);
+      }
+    }
+  } catch(e) {}
+}
+
+/* ── CALC ── */
+function calcGPA(courses) {
+  const totalCredits = courses.reduce((s, c) => s + Number(c.credit || 0), 0);
+  if (totalCredits === 0) return 0;
+  const weightedSum = courses.reduce((s, c) => s + (Number(c.score || 0) * Number(c.credit || 0)), 0);
+  const raw = weightedSum / totalCredits / 25;
+  return Math.min(4.0, raw);
+}
+
+/* ── RENDER ── */
+function renderTable() {
+  const tbody = document.getElementById('courses-tbody');
+  tbody.innerHTML = '';
+
+  state.courses.forEach((course, idx) => {
+    // Main row
+    const tr = document.createElement('tr');
+    tr.dataset.id = course.id;
+    tr.innerHTML = `
+      <td class="td-icon">
+        <div class="blue-icon">${String.fromCharCode(65 + (idx % 26))}</div>
+      </td>
+      <td class="td-chevron">
+        <button class="chevron-btn" onclick="toggleExpand(${course.id})" title="Toggle details">
+          ${course.expanded ? '▼' : '▶'}
+        </button>
+      </td>
+      <td class="course-name-cell" contenteditable="true" spellcheck="false"
+          data-field="name" data-id="${course.id}"
+          data-placeholder="Course name">${escHtml(course.name)}</td>
+      <td contenteditable="true" spellcheck="false"
+          data-field="professor" data-id="${course.id}"
+          data-placeholder="Professor">${escHtml(course.professor)}</td>
+      <td class="td-credit" contenteditable="true" spellcheck="false"
+          data-field="credit" data-id="${course.id}"
+          data-placeholder="0">${escHtml(String(course.credit))}</td>
+      <td class="td-score" contenteditable="true" spellcheck="false"
+          data-field="score" data-id="${course.id}"
+          data-placeholder="0">${escHtml(String(course.score))}</td>
+      <td class="td-del">
+        <button class="del-btn" onclick="deleteCourse(${course.id})" title="Delete course">🗑️</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+
+    // Detail row (expanded)
+    if (course.expanded) {
+      const dtr = document.createElement('tr');
+      dtr.classList.add('detail-row');
+      dtr.dataset.detailFor = course.id;
+      dtr.innerHTML = `
+        <td colspan="7">
+          <em>Course details – Credit: ${course.credit} | Score: ${course.score} | Professor: ${escHtml(course.professor)}</em>
+        </td>
+      `;
+      tbody.appendChild(dtr);
+    }
+  });
+
+  // Attach cell edit listeners
+  tbody.querySelectorAll('td[contenteditable]').forEach(td => {
+    td.addEventListener('input', onCellInput);
+    td.addEventListener('blur', onCellBlur);
+    td.addEventListener('keydown', onCellKeydown);
+  });
+
+  updateSummary();
+}
+
+function updateSummary() {
+  const totalCredits = state.courses.reduce((s, c) => s + Number(c.credit || 0), 0);
+  const gpa = calcGPA(state.courses);
+  document.getElementById('total-credits').textContent = totalCredits;
+  document.getElementById('gpa-value').textContent = gpa.toFixed(2);
+}
+
+/* ── ESCAPE HTML ── */
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/* ── CELL EDITING ── */
+function onCellInput(e) {
+  const td = e.currentTarget;
+  const id = Number(td.dataset.id);
+  const field = td.dataset.field;
+  const course = state.courses.find(c => c.id === id);
+  if (!course) return;
+  const raw = td.textContent.trim();
+  if (field === 'credit' || field === 'score') {
+    const num = parseFloat(raw);
+    course[field] = isNaN(num) ? 0 : num;
+  } else {
+    course[field] = raw;
+  }
+  updateSummary();
+}
+
+function onCellBlur(e) {
+  saveState();
+  // Update detail row if expanded
+  const td = e.currentTarget;
+  const id = Number(td.dataset.id);
+  const detailRow = document.querySelector(`tr[data-detail-for="${id}"]`);
+  if (detailRow) {
+    const course = state.courses.find(c => c.id === id);
+    if (course) {
+      detailRow.querySelector('td').innerHTML = `<em>Course details – Credit: ${course.credit} | Score: ${course.score} | Professor: ${escHtml(course.professor)}</em>`;
+    }
+  }
+}
+
+function onCellKeydown(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    e.currentTarget.blur();
+  }
+}
+
+/* ── TOGGLE EXPAND ── */
+function toggleExpand(id) {
+  const course = state.courses.find(c => c.id === id);
+  if (!course) return;
+  course.expanded = !course.expanded;
+  saveState();
+  renderTable();
+}
+
+/* ── DELETE COURSE ── */
+function deleteCourse(id) {
+  if (!confirm('Delete this course?')) return;
+  state.courses = state.courses.filter(c => c.id !== id);
+  saveState();
+  renderTable();
+}
+
+/* ── ADD COURSE ── */
+function addCourse() {
+  state.courses.push({
+    id: nextId++,
+    name: 'New Course',
+    professor: 'Professor Name',
+    credit: 0,
+    score: 0,
+    expanded: false,
+  });
+  saveState();
+  renderTable();
+  // Focus on the new course name
+  const rows = document.querySelectorAll('#courses-tbody tr:not(.detail-row)');
+  if (rows.length > 0) {
+    const lastRow = rows[rows.length - 1];
+    const nameCell = lastRow.querySelector('td[data-field="name"]');
+    if (nameCell) {
+      nameCell.focus();
+      // Select all text
+      const range = document.createRange();
+      range.selectNodeContents(nameCell);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+  }
+}
+
+/* ── TOGGLE SEMESTER / YEAR ── */
+function switchToggle(btn) {
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ── HEADER & META EDITING ── */
+function initHeaderEditing() {
+  const nameEl = document.getElementById('student-name');
+  nameEl.textContent = state.studentName;
+  nameEl.addEventListener('input', () => {
+    state.studentName = nameEl.textContent.trim();
+    saveState();
+  });
+  nameEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); nameEl.blur(); }
+  });
+
+  const semEl = document.getElementById('semester-heading');
+  semEl.textContent = state.semesterHeading;
+  semEl.addEventListener('input', () => {
+    state.semesterHeading = semEl.textContent.trim();
+    saveState();
+  });
+  semEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); semEl.blur(); }
+  });
+
+  const progEl = document.getElementById('program-field');
+  progEl.textContent = state.program;
+  progEl.addEventListener('input', () => {
+    state.program = progEl.textContent.trim();
+    document.getElementById('student-program-header').textContent = state.program;
+    saveState();
+  });
+  progEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); progEl.blur(); }
+  });
+
+  // Keep program header synced
+  document.getElementById('student-program-header').textContent = state.program;
+}
+
+/* ── SIDEBAR NAV CLICKS (prevent page jump) ── */
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    link.classList.add('active');
+  });
+  // Re-activate student card link initially
+});
+
+// Ensure the correct item stays active on load
+document.querySelectorAll('nav a').forEach(a => {
+  if (a.textContent.trim().startsWith('Student card') || a.textContent.includes('Student card')) {
+    a.classList.add('active');
+  }
+});
+
+/* ── INIT ── */
+loadState();
+initHeaderEditing();
+renderTable();
+
+// Sidebar nav: keep student card active on click
+document.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+  });
+});
+</script>
+</body>
+</html>
