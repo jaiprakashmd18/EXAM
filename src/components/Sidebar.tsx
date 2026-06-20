@@ -1,5 +1,17 @@
 import { useState, useRef } from "react";
 
+const pfpImages = import.meta.glob('/src/pfp/*', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+
+function getProfilePic(name: string): string | null {
+  const target = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  for (const [path, url] of Object.entries(pfpImages)) {
+    const filename = path.split('/').pop()!.replace(/\.[^.]+$/, '');
+    const normalized = filename.toLowerCase().replace(/[_\s]+/g, '-').replace(/[^a-z0-9-]/g, '');
+    if (normalized === target) return url;
+  }
+  return null;
+}
+
 interface Props {
   studentName: string;
   onNameChange: (name: string) => void;
@@ -34,9 +46,16 @@ export default function Sidebar({ studentName, onNameChange, onClose }: Props) {
       {/* Profile */}
       <div className="px-4 pt-5 pb-4 border-b border-gray-100">
         <div className="flex items-start justify-between mb-2">
-          <div className="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-base">{studentName.charAt(0)}</span>
-          </div>
+          {(() => {
+            const pic = getProfilePic(studentName);
+            return pic ? (
+              <img src={pic} alt={studentName} className="w-11 h-11 rounded-full object-cover flex-shrink-0" />
+            ) : (
+              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
+                <span className="text-white font-bold text-base">{studentName.charAt(0)}</span>
+              </div>
+            );
+          })()}
           <button onClick={onClose} className="lg:hidden p-1 text-gray-400 hover:text-gray-600 rounded transition-colors" aria-label="Close">
             <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
