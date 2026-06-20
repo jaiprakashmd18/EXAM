@@ -37,6 +37,7 @@ export default function Sidebar({ studentName, onNameChange, onClose }: Props) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(studentName);
   const ref = useRef<HTMLInputElement>(null);
+  const profilePic = getProfilePic(studentName);
 
   const startEdit = () => { setDraft(studentName); setEditing(true); setTimeout(() => ref.current?.focus(), 0); };
   const commit = () => { setEditing(false); onNameChange(draft.trim() || studentName); };
@@ -46,16 +47,13 @@ export default function Sidebar({ studentName, onNameChange, onClose }: Props) {
       {/* Profile */}
       <div className="px-4 pt-5 pb-4 border-b border-gray-100">
         <div className="flex items-start justify-between mb-2">
-          {(() => {
-            const pic = getProfilePic(studentName);
-            return pic ? (
-              <img src={pic} alt={studentName} className="w-11 h-11 rounded-full object-cover flex-shrink-0" />
-            ) : (
-              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-bold text-base">{studentName.charAt(0)}</span>
-              </div>
-            );
-          })()}
+          {profilePic ? (
+            <img src={profilePic} alt={studentName} className="w-11 h-11 rounded-full object-cover flex-shrink-0" />
+          ) : (
+            <div className="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-bold text-base">{studentName.charAt(0)}</span>
+            </div>
+          )}
           <button onClick={onClose} className="lg:hidden p-1 text-gray-400 hover:text-gray-600 rounded transition-colors" aria-label="Close">
             <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
