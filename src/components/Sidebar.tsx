@@ -1,15 +1,25 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
-const pfpModules = import.meta.glob<{ default: string }>('../pfp/*.{jpg,jpeg,png,webp,gif,svg}', { eager: true });
+function usePfp(name: string): string | null {
+  const [src, setSrc] = useState<string | null>(null);
 
-function getProfilePic(name: string): string | null {
-  const target = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-  for (const [path, mod] of Object.entries(pfpModules)) {
-    const filename = path.split('/').pop()!.replace(/\.[^.]+$/, '');
-    const normalized = filename.toLowerCase().replace(/[_\s]+/g, '-').replace(/[^a-z0-9-]/g, '');
-    if (normalized === target) return mod.default;
-  }
-  return null;
+  useEffect(() => {
+    const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    let active = true;
+    setSrc(null);
+    (async () => {
+      for (const ext of ['jpg', 'jpeg', 'png', 'webp']) {
+        try {
+          const url = `/pfp/${slug}.${ext}`;
+          const res = await fetch(url, { method: 'HEAD' });
+          if (res.ok && active) { setSrc(url); return; }
+        } catch { /* try next */ }
+      }
+    })();
+    return () => { active = false; };
+  }, [name]);
+
+  return src;
 }
 
 interface Props {
@@ -37,7 +47,7 @@ export default function Sidebar({ studentName, onNameChange, onClose }: Props) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(studentName);
   const ref = useRef<HTMLInputElement>(null);
-  const profilePic = getProfilePic(studentName);
+  const profilePic = usePfp(studentName);
 
   const startEdit = () => { setDraft(studentName); setEditing(true); setTimeout(() => ref.current?.focus(), 0); };
   const commit = () => { setEditing(false); onNameChange(draft.trim() || studentName); };
