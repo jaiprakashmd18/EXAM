@@ -1,13 +1,13 @@
 import { useState, useRef } from "react";
 
-const pfpImages = import.meta.glob('/src/pfp/*', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const pfpModules = import.meta.glob<{ default: string }>('../pfp/*.{jpg,jpeg,png,webp,gif,svg}', { eager: true });
 
 function getProfilePic(name: string): string | null {
   const target = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-  for (const [path, url] of Object.entries(pfpImages)) {
+  for (const [path, mod] of Object.entries(pfpModules)) {
     const filename = path.split('/').pop()!.replace(/\.[^.]+$/, '');
     const normalized = filename.toLowerCase().replace(/[_\s]+/g, '-').replace(/[^a-z0-9-]/g, '');
-    if (normalized === target) return url;
+    if (normalized === target) return mod.default;
   }
   return null;
 }
