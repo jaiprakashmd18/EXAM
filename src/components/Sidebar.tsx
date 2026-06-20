@@ -90,6 +90,12 @@ export default function Sidebar({ studentName, onNameChange, onClose }: Props) {
                 <span className={`flex-shrink-0 ${item.active ? "text-white" : "text-gray-400"}`}>{item.icon}</span>
                 <span className="text-[13px] leading-tight truncate">{item.label}</span>
               </div>
+
+                {item.badge && (
+                <span className={`text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 ml-1 ${
+                  item.active ? "bg-white text-orange-500" : "bg-orange-500 text-white"
+               }`}>{item.badge > 9 ? "9+" : item.badge}
+                  
             </span>
               )}
             </div>
